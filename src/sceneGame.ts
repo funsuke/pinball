@@ -1,10 +1,10 @@
-// GBの解像度 160 x 144
-// height を 720 にする(5倍に拡大して表示する)
-// → 800 x 720
 import * as b2 from "@akashic-extension/akashic-box2d";
 import { AkashicB2Body } from "./akashicB2Body";
 import { B2BodyData } from "./b2BodyData";
 
+// GBの解像度 160 x 144
+// height を 720 にする(5倍に拡大して表示する)
+// → 800 x 720
 const GB = {
 	width: 800,
 	height: 720,
@@ -61,7 +61,11 @@ export class SceneGame extends g.Scene {
 			};
 		});
 	}
-
+	/**
+	 * シーン読込時処理
+	 * @param param ゲームパラメータ
+	 * @returns
+	 */
 	private _Load(param: g.GameMainParameterObject): void {
 		// BGM再生
 		// this.asset.getAudioById("8bit-hoshi-carnival").play().changeVolume(0.3);
@@ -74,7 +78,6 @@ export class SceneGame extends g.Scene {
 		// -------------------------------------------------------------
 		// 右フリッパー
 		// -------------------------------------------------------------
-		// エンティティ
 		const flipperR = new g.Sprite({
 			scene: this,
 			src: this.asset.getImageById("flipperR"),
@@ -96,6 +99,33 @@ export class SceneGame extends g.Scene {
 		revoluteJointDef.upperAngle = 52 * Math.PI / 180;
 		revoluteJointDef.enableLimit = true;
 		this.flipperR = this.box2d.world.CreateJoint(revoluteJointDef);
+		// -------------------------------------------------------------
+		// 左フリッパー
+		// -------------------------------------------------------------
+		const flipperL = new g.Sprite({
+			scene: this,
+			src: this.asset.getImageById("flipper"),
+			anchorX: 0.5, anchorY: 0.5,
+			x: g.game.width / 2 - 132, y: 617,
+			// angle: 180 + 17 - 52,
+			angle: 180 + 17,
+			parent: this,
+		});
+		// AkashicB2Body設定
+		const b2FlipperL: b2.EBody = new AkashicB2Body(flipperL, this.box2d, B2BodyData.flipperL).getEBody();
+		// 左フリッパージョイント設定
+		revoluteJointDef = new b2.Box2DWeb.Dynamics.Joints.b2RevoluteJointDef();
+		revoluteJointDef.Initialize(this.box2d.world.GetGroundBody(), b2FlipperL, this.box2d.vec2(g.game.width / 2 - 132, 617));
+		revoluteJointDef.maxMotorTorque = FLIPPER_TORQUE;
+		revoluteJointDef.motorSpeed = 0.0;
+		revoluteJointDef.enableMotor = true;
+		revoluteJointDef.lowerAngle = -52 * Math.PI / 180;
+		revoluteJointDef.upperAngle = 0 * Math.PI / 180;
+		revoluteJointDef.enableLimit = true;
+		this.flipperL = this.box2d.world.CreateJoint(revoluteJointDef);
+		// -------------------------------------------------------------
+		// フリッパー用イベント
+		// -------------------------------------------------------------
 		this.onPointDownCapture.add((ev: g.PointDownEvent) => {
 			if (ev.point.x < g.game.width / 2) {
 				this.moveFlipperL(-FLIPPER_SPEED);
@@ -111,34 +141,8 @@ export class SceneGame extends g.Scene {
 			}
 		});
 		// -------------------------------------------------------------
-		// 左フリッパー
-		// -------------------------------------------------------------
-		// エンティティ
-		const flipperL = new g.Sprite({
-			scene: this,
-			src: this.asset.getImageById("flipper"),
-			anchorX: 0.5, anchorY: 0.5,
-			x: g.game.width / 2 - 132, y: 617,
-			// angle: 180 + 17 - 52,
-			angle: 180 + 17,
-			parent: this,
-		});
-		// AkashicB2Body設定
-		const b2FlipperL: b2.EBody = new AkashicB2Body(flipperL, this.box2d, B2BodyData.flipperL).getEBody();
-		// 左フリッパージョイント設定
-		revoluteJointDef = new b2.Box2DWeb.Dynamics.Joints.b2RevoluteJointDef();
-		revoluteJointDef.Initialize(this.box2d.world.GetGroundBody(), b2FlipperL?.b2Body, this.box2d.vec2(g.game.width / 2 - 132, 617));
-		revoluteJointDef.maxMotorTorque = FLIPPER_TORQUE;
-		revoluteJointDef.motorSpeed = 0.0;
-		revoluteJointDef.enableMotor = true;
-		revoluteJointDef.lowerAngle = -52 * Math.PI / 180;
-		revoluteJointDef.upperAngle = 0 * Math.PI / 180;
-		revoluteJointDef.enableLimit = true;
-		this.flipperL = this.box2d.world.CreateJoint(revoluteJointDef);
-		// -------------------------------------------------------------
 		// 右ガイド	C:109,109
 		// -------------------------------------------------------------
-		// エンティティ
 		const guideRight = new g.Sprite({
 			scene: this,
 			src: this.asset.getImageById("guideRight"),
@@ -150,7 +154,6 @@ export class SceneGame extends g.Scene {
 		// -------------------------------------------------------------
 		// 左ガイド
 		// -------------------------------------------------------------
-		// エンティティ
 		const guideLeft = new g.Sprite({
 			scene: this,
 			src: this.asset.getImageById("guideLeft"),
@@ -184,17 +187,6 @@ export class SceneGame extends g.Scene {
 		// AkashicB2Body設定
 		const b2SlingshotL: b2.EBody = new AkashicB2Body(slingshotL, this.box2d, B2BodyData.slingshotL).getEBody();
 		// -------------------------------------------------------------
-		// 左壁
-		// -------------------------------------------------------------
-		const wallL = new g.Sprite({
-			scene: this,
-			src: this.asset.getImageById("wallL"),
-			x: 240, y: 0,
-			parent: this,
-		});
-		// AkashicB2Body設定
-		new AkashicB2Body(wallL, this.box2d, B2BodyData.wallL);
-		// -------------------------------------------------------------
 		// 右壁
 		// -------------------------------------------------------------
 		const wallR = new g.Sprite({
@@ -206,6 +198,17 @@ export class SceneGame extends g.Scene {
 		});
 		// AkashicB2Body設定
 		new AkashicB2Body(wallR, this.box2d, B2BodyData.wallR);
+		// -------------------------------------------------------------
+		// 左壁
+		// -------------------------------------------------------------
+		const wallL = new g.Sprite({
+			scene: this,
+			src: this.asset.getImageById("wallL"),
+			x: 240, y: 0,
+			parent: this,
+		});
+		// AkashicB2Body設定
+		new AkashicB2Body(wallL, this.box2d, B2BodyData.wallL);
 		// -------------------------------------------------------------
 		// 天井
 		// -------------------------------------------------------------
