@@ -1,7 +1,9 @@
 import { AkashicB2BodyParameterObject, B2Shape } from "./akashicB2Body";
 
 export class B2BodyData {
+	// -----------------------------
 	// 右フリッパー
+	// -----------------------------
 	static flipperR: AkashicB2BodyParameterObject = {
 		isDynamic: true,
 		b2FixtureDefs: [
@@ -11,9 +13,7 @@ export class B2BodyData {
 				restitution: 0.2,
 			}
 		],
-		b2Shapes: [
-			B2Shape.poly
-		],
+		b2Shapes: [B2Shape.poly],
 		vertices: [[
 			[92 - 92, 10 - 29],
 			[172 - 92, 20 - 29],
@@ -27,7 +27,9 @@ export class B2BodyData {
 			[78 - 92, 15 - 29],
 		]]
 	};
+	// -----------------------------
 	// 左フリッパー
+	// -----------------------------
 	static flipperL: AkashicB2BodyParameterObject = {
 		isDynamic: true,
 		b2FixtureDefs: [
@@ -37,9 +39,7 @@ export class B2BodyData {
 				restitution: 0.2,
 			}
 		],
-		b2Shapes: [
-			B2Shape.poly
-		],
+		b2Shapes: [B2Shape.poly],
 		vertices: [[
 			[92 - 92, 10 - 29],
 			[106 - 92, 15 - 29],
@@ -53,7 +53,9 @@ export class B2BodyData {
 			[12 - 92, 20 - 29],
 		]]
 	};
+	// -----------------------------
 	// 右ガイド
+	// -----------------------------
 	static guideR: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -61,9 +63,7 @@ export class B2BodyData {
 			friction: 0.4,			// 摩擦係数
 			restitution: 0.2,		// 反発係数
 		}],
-		b2Shapes: [
-			B2Shape.poly, B2Shape.poly
-		],
+		b2Shapes: [B2Shape.poly],
 		vertices: [[
 			[180 - 109, 16 - 109],	// 5px↓
 			[187 - 109, 19 - 109],	// 5px↓
@@ -84,7 +84,9 @@ export class B2BodyData {
 			[62 - 109, 159 - 109],
 		]],
 	};
+	// -----------------------------
 	// 左ガイド
+	// -----------------------------
 	static guideL: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -92,9 +94,7 @@ export class B2BodyData {
 			friction: 0.4,			// 摩擦係数
 			restitution: 0.2,		// 反発係数
 		}],
-		b2Shapes: [
-			B2Shape.poly, B2Shape.poly
-		],
+		b2Shapes: [B2Shape.poly],
 		vertices: [[
 			[38 - 109, 16 - 109],	// 5px↓
 			[45 - 109, 19 - 109],	// 5px↓
@@ -115,7 +115,9 @@ export class B2BodyData {
 			[28 - 109, 140 - 109],
 		]],
 	};
+	// -----------------------------
 	// 右スリングショット
+	// -----------------------------
 	static slingshotR: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -123,9 +125,7 @@ export class B2BodyData {
 			friction: 0.4,
 			restitution: 0.2,
 		}],
-		b2Shapes: [
-			B2Shape.poly
-		],
+		b2Shapes: [B2Shape.poly],
 		vertices: [[
 			[69 - 50, 6 - 50],
 			[74 - 50, 8 - 50],
@@ -134,7 +134,9 @@ export class B2BodyData {
 			[22 - 50, 73 - 50],
 		]],
 	};
+	// -----------------------------
 	// 左スリングショット
+	// -----------------------------
 	static slingshotL: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -142,9 +144,7 @@ export class B2BodyData {
 			friction: 0.4,
 			restitution: 0.2,
 		}],
-		b2Shapes: [
-			B2Shape.poly
-		],
+		b2Shapes: [B2Shape.poly],
 		vertices: [[
 			[100 - 69 - 50, 6 - 50],
 			[100 - 22 - 50, 73 - 50],
@@ -153,7 +153,9 @@ export class B2BodyData {
 			[100 - 74 - 50, 8 - 50],
 		]],
 	};
+	// -----------------------------
 	// 右壁
+	// -----------------------------
 	static wallR: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -161,11 +163,7 @@ export class B2BodyData {
 			friction: 0.4,
 			restitution: 0.2,
 		}],
-		b2Shapes: [
-			B2Shape.poly, B2Shape.poly, B2Shape.poly, B2Shape.poly,
-			B2Shape.poly, B2Shape.poly, B2Shape.poly, B2Shape.poly,
-			B2Shape.poly, B2Shape.poly,
-		],
+		b2Shapes: [B2Shape.poly],
 		vertices: [[
 			[300 - 0 - 150, 0 - 360],
 			[300 - 0 - 150, 720 - 360],
@@ -219,7 +217,9 @@ export class B2BodyData {
 			[300 - 287 - 150, 720 - 360],
 		]],
 	};
+	// -----------------------------
 	// 左壁
+	// -----------------------------
 	static wallL: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -227,11 +227,7 @@ export class B2BodyData {
 			friction: 0.4,
 			restitution: 0.2,
 		}],
-		b2Shapes: [
-			B2Shape.poly, B2Shape.poly, B2Shape.poly, B2Shape.poly,
-			B2Shape.poly, B2Shape.poly, B2Shape.poly, B2Shape.poly,
-			B2Shape.poly, B2Shape.poly,
-		],
+		b2Shapes: [B2Shape.poly],
 		vertices: [[
 			[0 - 150, 0 - 360],
 			[35 - 150, 0 - 360],
@@ -285,7 +281,9 @@ export class B2BodyData {
 			[35 - 150, 720 - 360],
 		]],
 	};
+	// -----------------------------
 	// 天井
+	// -----------------------------
 	static wallU: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -296,7 +294,9 @@ export class B2BodyData {
 		b2Shapes: [B2Shape.rect],
 		vertices: [[[g.game.width, 8]]],
 	};
+	// -----------------------------
 	// 天井ブロック右
+	// -----------------------------
 	static wallUR: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -307,7 +307,9 @@ export class B2BodyData {
 		b2Shapes: [B2Shape.rect],
 		vertices: [[[80, 80]]],
 	};
+	// -----------------------------
 	// 天井ブロック左
+	// -----------------------------
 	static wallUL: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
@@ -318,7 +320,9 @@ export class B2BodyData {
 		b2Shapes: [B2Shape.rect],
 		vertices: [[[80, 80]]],
 	};
+	// -----------------------------
 	// ボール
+	// -----------------------------
 	static ball: AkashicB2BodyParameterObject = {
 		isDynamic: true,
 		b2FixtureDefs: [{
