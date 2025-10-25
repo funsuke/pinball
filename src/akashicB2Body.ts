@@ -14,7 +14,7 @@ export interface AkashicB2BodyParameterObject {
 };
 
 export class AkashicB2Body {
-	private entity: g.E | g.Sprite;
+	private entity: g.E;
 	private box2d: b2.Box2D;
 	private b2Body: b2.EBody;
 	private b2FixtureDefs: b2.Box2DFixtureDef[];
@@ -33,23 +33,22 @@ export class AkashicB2Body {
 		//
 		this.init();
 	}
-	set Box2D(box2d: b2.Box2D) {
-		this.box2d = box2d;
-	}
 	//
 	public getEBody(): b2.EBody {
 		return this.b2Body;
 	}
+	public getEntity(): g.E {
+		return this.entity;
+	}
 	//
 	private init(): void {
 		// Body設定
-		const type: number | undefined = this.isDynamic ? b2.BodyType.Dynamic : b2.BodyType.Static;
 		const b2BodyDef = this.box2d.createBodyDef({
-			type: type,
+			type: this.isDynamic ? b2.BodyType.Dynamic : b2.BodyType.Static,
 		});
 		// Fixture設定
 		const b2FixtureDef: b2.Box2DFixtureDef[] = [];
-		this.vertices.forEach((_, i) => {
+		this.vertices.forEach((v, i) => {
 			const fixtureDef: b2.Box2DFixtureDef = (i >= this.b2FixtureDefs.length) ?
 				this.b2FixtureDefs[this.b2FixtureDefs.length - 1] :
 				this.b2FixtureDefs[i];
@@ -58,17 +57,17 @@ export class AkashicB2Body {
 				this.b2Shapes[i];
 			switch (shape) {
 				case B2Shape.circle:
-					fixtureDef.shape = this.box2d.createCircleShape(this.vertices[i][0][0]);
+					fixtureDef.shape = this.box2d.createCircleShape(v[0][0]);
 					break;
 				case B2Shape.poly:
-					fixtureDef.shape = this.box2d.createPolygonShape(this.getVertices(this.vertices[i]));
+					fixtureDef.shape = this.box2d.createPolygonShape(this.getVertices(v));
 					break;
 				case B2Shape.rect:
-					fixtureDef.shape = this.box2d.createRectShape(this.vertices[i][0][0], this.vertices[i][0][1]);
+					fixtureDef.shape = this.box2d.createRectShape(v[0][0], v[0][1]);
 					break;
-				default:
-					console.log(shape);
-					break;
+				// default:
+				// 	console.log(shape);
+				// 	break;
 			}
 			b2FixtureDef.push(
 				this.box2d.createFixtureDef(fixtureDef)
@@ -77,15 +76,23 @@ export class AkashicB2Body {
 		// b2Body設定
 		this.b2Body = this.box2d.createBody(this.entity, b2BodyDef, b2FixtureDef) as b2.EBody;
 	}
-
+	/**
+	 * 頂点配列を物理エンジン世界にスケールしたベクトル配列に変換
+	 * @param poss 頂点２次元配列
+	 * @returns 頂点ベクトル配列
+	 */
 	private getVertices(poss: number[][]): b2.Box2DWeb.Common.Math.b2Vec2[] {
-		const b2Vec2s: b2.Box2DWeb.Common.Math.b2Vec2[] = [];
+		const vec2s: b2.Box2DWeb.Common.Math.b2Vec2[] = [];
 		poss.forEach(v => {
-			b2Vec2s.push(this.getVertex(v));
+			vec2s.push(this.getVertex(v));
 		});
-		return b2Vec2s;
+		return vec2s;
 	}
-
+	/**
+	 * 頂点を物理エンジン世界にスケールしたベクトルに変換
+	 * @param pos 頂点配列
+	 * @returns 頂点ベクトル
+	 */
 	private getVertex(pos: number[]): b2.Box2DWeb.Common.Math.b2Vec2 {
 		return this.box2d.vec2(pos[0], pos[1]);
 	}

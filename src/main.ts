@@ -19,6 +19,11 @@
 // ・myhtml/js/sandbox.js::resize
 // 		width: (window.innerWidth || document.documentElement.clientWidth) * 0.97,
 // 		height: (window.innerHeight || document.documentElement.clientHeight) * 0.97
+// ■akashic-box2d game.json g.game.fpsの設定
+// ・すり抜け発生を少なくするために可能な限り高く設定したい(衝突演算回数を増やす)
+// ・高すぎるとスペック低い環境で動作不具合(カクツキ、フレーム落ち)起こるけど、
+//   この対処法しか思いつかん
+// ・とりあえず60fpsに設定
 
 import { SceneTitle } from "./sceneTitle";
 
