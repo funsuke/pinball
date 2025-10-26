@@ -2,6 +2,7 @@ import * as b2 from "@akashic-extension/akashic-box2d";
 import tl = require("@akashic-extension/akashic-timeline");
 import { AkashicB2Body } from "./akashicB2Body";
 import { B2BodyData } from "./b2BodyData";
+import { Number } from "./number";
 
 // GBの解像度 160 x 144
 // height を 720 にする(5倍に拡大して表示する)
@@ -42,6 +43,17 @@ export class SceneGame extends g.Scene {
 	private isExistNamako: boolean = true;
 	private isPlayAudioFlipperL: boolean = true;
 	private isPlayAudioFlipperR: boolean = true;
+	private lion: g.Sprite;
+	private b2Lion: b2.EBody;
+	private namaco: g.Sprite[];
+	private cntNamaco: number = 0;
+	private isAliveLion: boolean = false;
+	private totalScore: Number;
+	private multiScore: Number;
+	private bonusScore: Number;
+	private timeScore: Number;
+	private cntMoba: number = 0;
+	private playTime: number = 120;
 	//
 	constructor(param: g.GameMainParameterObject) {
 		super({ game: g.game });
@@ -52,16 +64,23 @@ export class SceneGame extends g.Scene {
 		// 更新時処理
 		this.onUpdate.add(() => {
 			this.box2d.step(1 / g.game.fps);
+			// ※(box2d)削除や追加はstep()が行われる最中にしてはならない
 			// 削除リスト処理
 			this.removeEBodyList.forEach((b2body) => {
 				this.box2d.removeBody(b2body);
 			});
 			this.removeEBodyList = [];
-			// 追加リスト処理
-			// this.pushEBodyList.forEach((b2body) => {
-			// 	this.box2d.bodies.push(b2body);
-			// });
-			// this.pushEBodyList = [];
+			// 追加
+			if (this.isAliveLion) {
+				// アツマライオン復活
+				this.lion.show();
+				this.b2Lion = new AkashicB2Body(this.lion, this.box2d, B2BodyData.lion).getEBody();
+				this.addEventLion();
+				this.isAliveLion = false;
+			}
+			// 時間表示
+			this.timeScore.setNumber(Math.ceil(this.playTime));
+			this.playTime = (this.playTime > 0) ? this.playTime - 1 / g.game.fps : 0;
 		});
 		// -------------------------------------------------------------
 		// フリッパー用イベント
@@ -435,6 +454,23 @@ export class SceneGame extends g.Scene {
 			});
 		}
 		// -------------------------------------------------------------
+		// NAMACO文字
+		// -------------------------------------------------------------
+		const yPos: number[] = [450, 440, 435, 435, 440, 450];
+		this.namaco = new Array<g.Sprite>(6);
+		for (let i = 0; i < this.namaco.length; i++) {
+			this.namaco[i] = new g.Sprite({
+				scene: this,
+				src: this.asset.getImageById("namaco"),
+				width: 40, height: 40,
+				srcWidth: 40, srcHeight: 40,
+				srcX: 40 * i, srcY: 0,
+				x: PADDING_X + 280 + 40 * i, y: yPos[i],
+				opacity: 0.3,
+				parent: this,
+			});
+		};
+		// -------------------------------------------------------------
 		// ナマコ x:510 ~ 640 ~ 770, y:450
 		// -------------------------------------------------------------
 		// 影
@@ -528,7 +564,7 @@ export class SceneGame extends g.Scene {
 				//
 				new tl.Timeline(this).create(namako)
 					.moveX(640 - 65, 1000).con().moveY(400 - 50, 1000, tl.Easing.easeOutSine)
-					.moveX(640 + 0, 1000).con().moveY(400, 1000, tl.Easing.easeInSine)
+					.moveX(640 + 0, 1000).con().moveY(400, 1000, tl.Easing.easeInSine);
 			}).call(() => {
 				this.b2Namako = new AkashicB2Body(namako, this.box2d, B2BodyData.namako).getEBody();
 				this.isExistNamako = true;
@@ -556,7 +592,7 @@ export class SceneGame extends g.Scene {
 				//
 				new tl.Timeline(this).create(namako)
 					.moveX(640 + 65, 1000).con().moveY(400 - 50, 1000, tl.Easing.easeOutSine)
-					.moveX(640 + 135, 1000).con().moveY(400, 1000, tl.Easing.easeInSine)
+					.moveX(640 + 135, 1000).con().moveY(400, 1000, tl.Easing.easeInSine);
 			}).call(() => {
 				this.b2Namako = new AkashicB2Body(namako, this.box2d, B2BodyData.namako).getEBody();
 				this.isExistNamako = true;
@@ -584,7 +620,7 @@ export class SceneGame extends g.Scene {
 				//
 				new tl.Timeline(this).create(namako)
 					.moveX(640 + 65, 1000).con().moveY(400 - 50, 1000, tl.Easing.easeOutSine)
-					.moveX(640 + 0, 1000).con().moveY(400, 1000, tl.Easing.easeInSine)
+					.moveX(640 + 0, 1000).con().moveY(400, 1000, tl.Easing.easeInSine);
 
 			}).call(() => {
 				this.b2Namako = new AkashicB2Body(namako, this.box2d, B2BodyData.namako).getEBody();
@@ -613,7 +649,7 @@ export class SceneGame extends g.Scene {
 				//
 				new tl.Timeline(this).create(namako)
 					.moveX(640 - 65, 1000).con().moveY(400 - 50, 1000, tl.Easing.easeOutSine)
-					.moveX(640 - 130, 1000).con().moveY(400, 1000, tl.Easing.easeInSine)
+					.moveX(640 - 130, 1000).con().moveY(400, 1000, tl.Easing.easeInSine);
 			}).call(() => {
 				this.b2Namako = new AkashicB2Body(namako, this.box2d, B2BodyData.namako).getEBody();
 				this.isExistNamako = true;
@@ -660,9 +696,9 @@ export class SceneGame extends g.Scene {
 			src: this.asset.getImageById("ball"),
 			anchorX: 0.5, anchorY: 0.5,
 			// x: 320, y: 400, // ボッシュートテスト
-			x: 960, y: 400, // ボッシュートテスト
+			// x: 960, y: 400, // ボッシュートテスト
 			// x: 840, y: 400,
-			// x: 470, y: 200,
+			x: PADDING_X + 167.5, y: 400,
 			parent: this,
 		});
 		// AkashicB2Body設定
@@ -676,13 +712,14 @@ export class SceneGame extends g.Scene {
 		// -------------------------------------------------------------
 		// アツマライオン(アップポスト)
 		// -------------------------------------------------------------
-		const lion = new g.Sprite({
+		this.lion = new g.Sprite({
 			scene: this,
 			src: this.asset.getImageById("916819"),
 			x: (g.game.width - 100) / 2, y: 600,
 			parent: this,
 		});
-		new AkashicB2Body(lion, this.box2d, B2BodyData.lion);
+		this.b2Lion = new AkashicB2Body(this.lion, this.box2d, B2BodyData.lion).getEBody();
+		this.addEventLion();
 		// -------------------------------------------------------------
 		// 天井ブロック
 		// -----------------d--------------------------------------------
@@ -770,6 +807,24 @@ export class SceneGame extends g.Scene {
 			x: 140, y: g.game.height - 40 - 100,
 			parent: this,
 		});
+		// 左
+		new g.Sprite({
+			scene: this,
+			src: this.asset.getImageById("leftright"),
+			width: 120, height: 120,
+			anchorX: 0.5, anchorY: 0.5,
+			x: 140, y: g.game.height - 40 - 100,
+			parent: this,
+		});
+		// キー説明
+		new g.Sprite({
+			scene: this,
+			src: this.asset.getImageById("key"),
+			width: 240, height: 60,
+			anchorX: 0.5, anchorY: 1.0,
+			x: 140, y: g.game.height,
+			parent: this,
+		});
 		// -------------------------------------------------------------
 		// 右ボタン
 		// -------------------------------------------------------------
@@ -780,6 +835,80 @@ export class SceneGame extends g.Scene {
 			x: g.game.width - 140, y: g.game.height - 40 - 100,
 			parent: this,
 		});
+		// 左
+		new g.Sprite({
+			scene: this,
+			src: this.asset.getImageById("leftright"),
+			width: 120, height: 120,
+			srcX: 120, srcY: 0,
+			anchorX: 0.5, anchorY: 0.5,
+			x: g.game.width - 140, y: g.game.height - 40 - 100,
+			parent: this,
+		});
+		// キー説明
+		new g.Sprite({
+			scene: this,
+			src: this.asset.getImageById("key"),
+			width: 240, height: 60,
+			srcX: 0, srcY: 60,
+			anchorX: 0.5, anchorY: 1.0,
+			x: g.game.width - 140, y: g.game.height,
+			parent: this,
+		});
+		// -------------------------------------------------------------
+		// スコア
+		// -------------------------------------------------------------
+		// 総得点
+		this.totalScore = new Number({
+			scene: this,
+			assetId: "num",
+			maxDigit: 8,
+			align: "left",
+			zero: true,
+			x: PADDING_X + 0, y: g.game.height - 35,
+			parent: this,
+		});
+		this.totalScore.setNumber(0);
+		// マルチスコア
+		this.multiScore = new Number({
+			scene: this,
+			assetId: "num",
+			maxDigit: 2,
+			align: "right",
+			zero: true,
+			x: g.game.width - PADDING_X - 40 * 2, y: g.game.height - 35,
+			parent: this,
+		});
+		this.multiScore.setNumber(1);
+		// ボーナススコア
+		this.bonusScore = new Number({
+			scene: this,
+			assetId: "num",
+			maxDigit: 5,
+			align: "right",
+			zero: true,
+			x: g.game.width - PADDING_X - 40 * 8, y: g.game.height - 35,
+			parent: this,
+		});
+		this.bonusScore.setNumber(1000);
+		// X
+		new g.Sprite({
+			scene: this,
+			src: this.asset.getImageById("x"),
+			x: g.game.width - PADDING_X - 40 * 3, y: g.game.height - 35,
+			parent: this,
+		});
+		// 時間
+		this.timeScore = new Number({
+			scene: this,
+			assetId: "num",
+			maxDigit: 3,
+			align: "right",
+			zero: true,
+			x: PADDING_X + GB.width - 40 * 3, y: 0,
+			parent: this,
+		});
+		this.timeScore.setNumber(this.playTime);
 		// -------------------------------------------------------------
 		// テスト画像
 		// -------------------------------------------------------------
@@ -805,7 +934,9 @@ export class SceneGame extends g.Scene {
 					// console.log("右スリングショット発動");
 					this.b2Ball.b2Body.ApplyImpulse(this.box2d.vec2(-780, -450), this.b2Ball.b2Body.GetPosition());
 					//
-					this.asset.getAudioById("nc88229").play();
+					this.asset.getAudioById("nc363836").play();
+					//
+					this.showScore(PADDING_X + 575, 480, 1, 100);
 				}
 			}
 			// ボール→左スリングショットの衝突判定
@@ -817,7 +948,9 @@ export class SceneGame extends g.Scene {
 					// console.log("左スリングショット発動");
 					this.b2Ball.b2Body.ApplyImpulse(this.box2d.vec2(780, -450), this.b2Ball.b2Body.GetPosition());
 					//
-					this.asset.getAudioById("nc88229").play();
+					this.asset.getAudioById("nc363836").play();
+					//
+					this.showScore(PADDING_X + 225, 480, 1, 100);
 				}
 			}
 			// ボール→左ハッカの衝突判定
@@ -831,6 +964,8 @@ export class SceneGame extends g.Scene {
 				this.asset.getAudioById("nc173695").play();
 				//
 				this.isExistDrinkL = false;
+				//
+				this.showScore(PADDING_X + 95, 490, 2, 200);
 			}
 			// ボール→右ハッカの衝突判定
 			if (this.box2d.isContact(this.b2Ball, this.b2DrinkR, contact)) {
@@ -843,6 +978,8 @@ export class SceneGame extends g.Scene {
 				this.asset.getAudioById("nc173695").play();
 				//
 				this.isExistDrinkR = false;
+				//
+				this.showScore(PADDING_X + 705, 490, 2, 200);
 			}
 			// ボール→ニコモバの衝突判定
 			for (let i = 0; i < b2Moba.length; i++) {
@@ -850,11 +987,43 @@ export class SceneGame extends g.Scene {
 					b2Moba[i].getEntity().tag.state = 2;
 					//
 					this.asset.getAudioById("nc294364").play();
+					// 440+200i
+					this.showScore(moba[i].x, moba[i].y, 3, 600);
+					//
+					this.cntMoba++;
+					if (this.cntMoba % 3 === 0) {
+						this.bonusScore.setNumber(this.bonusScore.nowScore + 2000);
+					}
 				}
 			}
 			// ボール→ナマコの衝突判定
 			if (this.box2d.isContact(this.b2Ball, this.b2Namako, contact)) {
+				// ナマコ文字復活
+				if (this.cntNamaco < 6) {
+					this.namaco[this.cntNamaco].opacity = 1.0;
+					this.namaco[this.cntNamaco].modified();
+					this.cntNamaco++;
+					if (this.cntNamaco === 6) {
+						this.isAliveLion = true;
+						this.cntNamaco = 0;
+						this.namaco.forEach((v) => {
+							v.opacity = 0.3;
+							v.modified();
+						});
+						//
+						this.bonusScore.setNumber(this.bonusScore.nowScore + 3000);
+						this.multiScore.setNumber(this.multiScore.nowScore + 3);
+						this.showScore(g.game.width / 2, g.game.height - 150, 5, 5400);
+					}
+				}
+				//
 				this.asset.getAudioById("nc373067").play();
+				//
+				this.showScore(namako.x, namako.y, 4, 1800);
+			}
+			// ボール→ライオンの衝突判定
+			if (this.box2d.isContact(this.b2Ball, this.b2Lion, contact)) {
+				;
 			}
 		});
 		// 衝突終了時処理
@@ -899,31 +1068,16 @@ export class SceneGame extends g.Scene {
 	}
 
 	private ballPushUp(): void {
-		// this.box2d.bodies.forEach((ebody: b2.EBody) => {
-		// 	if (ebody.id === this.ballId) {
-		// 		// console.log("ボール位置チェック y=" + ebody.b2Body.GetPosition().y * this.box2d.scale);
-		// 		if (ebody.b2Body.GetPosition().y > (GB.height + ebody.entity.height) / this.box2d.scale) {
-		// 			// console.log("ボール位置リセット");
-		// 			ebody.b2Body.SetPosition(this.box2d.vec2(g.game.width / 2, g.game.height + ebody.entity.height));
-		// 			ebody.b2Body.SetLinearVelocity(this.box2d.vec2(0, 0));
-		// 			ebody.b2Body.SetAngularVelocity(30);
-		// 			// 上方向にインパルスを与えて打ち上げる
-		// 			if (!DEBUG_DRINK_REMOVE) {
-		// 				ebody.b2Body.ApplyImpulse(this.box2d.vec2(30, -700), ebody.b2Body.GetPosition());
-		// 			}
-		// 			if (DEBUG_DRINK_REMOVE) {
-		// 				// debug 削除テスト
-		// 				ebody.b2Body.SetAngularVelocity(0);
-		// 				ebody.b2Body.SetPosition(this.box2d.vec2(960, 400));
-		// 			}
-		// 		}
-		// 	}
-		// });
-		if (this.b2Ball.b2Body.GetPosition().y > (GB.height + this.b2Ball.entity.height) / this.box2d.scale) {
-			// console.log("ボール位置リセット");
-			// this.b2Ball.b2Body.SetPosition(this.box2d.vec2(g.game.width / 2, g.game.height + ebody.entity.height));
-			// this.b2Ball.b2Body.SetLinearVelocity(this.box2d.vec2(0, 0));
-			// this.b2Ball.b2Body.SetAngularVelocity(30);
+		if (this.b2Ball.b2Body.GetPosition().y > (GB.height + 500) / this.box2d.scale) {
+			// ボーナス計算
+			g.game.vars.gameState.score += this.bonusScore.nowScore * this.multiScore.nowScore;
+			this.totalScore.setNumber(g.game.vars.gameState.score);
+			this.bonusScore.setNumber(1000);
+			this.multiScore.setNumber(1);
+			// ライオン消失
+			this.removeEBodyList.push(this.b2Lion);
+			this.lion.hide();
+			// 再配置
 			this.setBallPosition(
 				g.game.width / 2, g.game.height + this.b2Ball.entity.height,
 				this.box2d.vec2(0, 0), 30
@@ -945,11 +1099,11 @@ export class SceneGame extends g.Scene {
 		const ballPosX: number = b2ball.b2Body.GetPosition().x * this.box2d.scale - PADDING_X;
 		const ballPosY: number = b2ball.b2Body.GetPosition().y * this.box2d.scale;
 		// x:145~190, 160~175 y:500
-		// 右ハッカが無い、ボールがチェッカーの範囲内か？
-		if (!this.isExistDrinkR) {
-			// console.log("ボール位置：" + ballPosX + ", " + ballPosY);
-			if (ballPosX >= 160 && ballPosX < 175) {
-				if (ballPosY >= 500 && ballPosY < 515) {
+		// console.log("ボール位置：" + ballPosX + ", " + ballPosY);
+		if (ballPosX >= 160 && ballPosX < 175) {
+			if (ballPosY >= 500 && ballPosY < 515) {
+				// 右ハッカが無い、ボールがチェッカーの範囲内か？
+				if (!this.isExistDrinkR) {
 					// console.log("ボールが左チェッカーを通った");
 					// エンティティの更新
 					this.drinkR.frameNumber = 1;
@@ -960,12 +1114,14 @@ export class SceneGame extends g.Scene {
 					//
 					this.asset.getAudioById("nc273969").play();
 				}
+				//
+				this.showScore(PADDING_X + 167, 500, 0, 30);
 			}
 		}
-		// 左ハッカが無い、ボールがチェッカーの範囲内か？
-		if (!this.isExistDrinkL) {
-			if (ballPosX >= 625 && ballPosX < 640) {
-				if (ballPosY >= 500 && ballPosY < 515) {
+		if (ballPosX >= 625 && ballPosX < 640) {
+			if (ballPosY >= 500 && ballPosY < 515) {
+				// 左ハッカが無い、ボールがチェッカーの範囲内か？
+				if (!this.isExistDrinkL) {
 					// エンティティの更新
 					this.drinkL.frameNumber = 1;
 					this.drinkL.modified();
@@ -975,6 +1131,8 @@ export class SceneGame extends g.Scene {
 					//
 					this.asset.getAudioById("nc273969").play();
 				}
+				//
+				this.showScore(PADDING_X + 632, 500, 0, 30);
 			}
 		}
 	}
@@ -1008,5 +1166,40 @@ export class SceneGame extends g.Scene {
 	private _moveB2Body(b2body: b2.EBody, x: number, y: number): void {
 		// b2Body
 		b2body.b2Body.SetPosition(this.box2d.vec2(x, y));
+	}
+
+	private addEventLion(): void {
+		new tl.Timeline(this).create(this.lion)
+			.wait(17000).every((e, p) => {
+				const cnt = Math.floor(e / 200);
+				if (cnt % 2 === 0 && this.lion.opacity === 1) {
+					this.lion.opacity = 0.3;
+					this.lion.modified();
+				} else if (cnt % 2 === 1 && this.lion.opacity === 0.3) {
+					this.lion.opacity = 1;
+					this.lion.modified();
+				}
+			}, 3000).call(() => {
+				this.lion.hide();
+				this.removeEBodyList.push(this.b2Lion);
+			});
+	}
+
+	private showScore(x: number, y: number, scoreNo: number, score: number): void {
+		const sprite = new g.Sprite({
+			scene: this,
+			src: this.asset.getImageById("score"),
+			width: 110, height: 50,
+			srcX: 0, srcY: 50 * scoreNo,
+			anchorX: 0.5, anchorY: 0.5,
+			x: x, y: y,
+			parent: this,
+		});
+		new tl.Timeline(this).create(sprite)
+			.moveBy(0, -10, 800).wait(200).call(() => {
+				sprite.destroy();
+			});
+		g.game.vars.gameState.score += score;
+		this.totalScore.setNumber(g.game.vars.gameState.score);
 	}
 }

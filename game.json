@@ -26,117 +26,6 @@
 			"path": "script/sceneTitle.js",
 			"global": true
 		},
-		"flipper": {
-			"type": "image",
-			"path": "image/flipper.png",
-			"width": 185,
-			"height": 59,
-			"global": true
-		},
-		"sample": {
-			"type": "image",
-			"path": "image/sample.png",
-			"width": 800,
-			"height": 720,
-			"global": true
-		},
-		"sample2": {
-			"type": "image",
-			"path": "image/sample2.png",
-			"width": 800,
-			"height": 720,
-			"global": true
-		},
-		"ball": {
-			"type": "image",
-			"path": "image/ball.png",
-			"width": 100,
-			"height": 100,
-			"global": true
-		},
-		"guideLeft": {
-			"type": "image",
-			"path": "image/guideLeft.png",
-			"width": 219,
-			"height": 219,
-			"global": true
-		},
-		"guideRight": {
-			"type": "image",
-			"path": "image/guideRight.png",
-			"width": 219,
-			"height": 219,
-			"global": true
-		},
-		"8bit-hoshi-carnival": {
-			"type": "audio",
-			"path": "audio/8bit-hoshi-carnival",
-			"systemId": "music",
-			"duration": 78144,
-			"hint": {
-				"extensions": [
-					".m4a",
-					".ogg"
-				]
-			},
-			"global": true
-		},
-		"slingshotL": {
-			"type": "image",
-			"path": "image/slingshotL.png",
-			"width": 100,
-			"height": 100,
-			"global": true
-		},
-		"slingshotR": {
-			"type": "image",
-			"path": "image/slingshotR.png",
-			"width": 100,
-			"height": 100,
-			"global": true
-		},
-		"slingshotL_": {
-			"type": "image",
-			"path": "image/slingshotL_.png",
-			"width": 100,
-			"height": 100,
-			"global": true
-		},
-		"wallL": {
-			"type": "image",
-			"path": "image/wallL.png",
-			"width": 300,
-			"height": 720,
-			"global": true
-		},
-		"wallR": {
-			"type": "image",
-			"path": "image/wallR.png",
-			"width": 300,
-			"height": 720,
-			"global": true
-		},
-		"flipperR": {
-			"type": "image",
-			"path": "image/flipperR.png",
-			"width": 185,
-			"height": 59,
-			"global": true
-		},
-		"wallL2": {
-			"type": "image",
-			"path": "image/wallL2.png",
-			"width": 260,
-			"height": 260,
-			"global": true
-		},
-		"wallR2": {
-			"type": "image",
-			"path": "image/wallR2.png",
-			"width": 260,
-			"height": 260,
-			"global": true
-		},
 		"akashicB2Body": {
 			"type": "script",
 			"path": "script/akashicB2Body.js",
@@ -196,13 +85,6 @@
 			"height": 40,
 			"global": true
 		},
-		"pinball_gb_ss1": {
-			"type": "image",
-			"path": "image/pinball_gb_ss1.png",
-			"width": 800,
-			"height": 720,
-			"global": true
-		},
 		"frameL1": {
 			"type": "image",
 			"path": "image/frameL1.png",
@@ -215,13 +97,6 @@
 			"path": "image/frameR1.png",
 			"width": 240,
 			"height": 720,
-			"global": true
-		},
-		"ball1": {
-			"type": "image",
-			"path": "image/ball1.png",
-			"width": 99,
-			"height": 99,
 			"global": true
 		},
 		"button": {
@@ -371,6 +246,126 @@
 				]
 			},
 			"global": true
+		},
+		"8bit-hoshi-carnival": {
+			"type": "audio",
+			"path": "audio/8bit-hoshi-carnival",
+			"systemId": "music",
+			"duration": 78144,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			},
+			"global": true
+		},
+		"ball": {
+			"type": "image",
+			"path": "image/ball.png",
+			"width": 100,
+			"height": 100,
+			"global": true
+		},
+		"namaco": {
+			"type": "image",
+			"path": "image/namaco.png",
+			"width": 240,
+			"height": 40,
+			"global": true
+		},
+		"score": {
+			"type": "image",
+			"path": "image/score.png",
+			"width": 110,
+			"height": 300,
+			"global": true
+		},
+		"number": {
+			"type": "script",
+			"path": "script/number.js",
+			"global": true
+		},
+		"leftright": {
+			"type": "image",
+			"path": "image/leftright.png",
+			"width": 240,
+			"height": 120,
+			"global": true
+		},
+		"nc363836": {
+			"type": "audio",
+			"path": "audio/nc363836",
+			"systemId": "sound",
+			"duration": 651,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			},
+			"global": true
+		},
+		"key": {
+			"type": "image",
+			"path": "image/key.png",
+			"width": 240,
+			"height": 120,
+			"global": true
+		},
+		"x": {
+			"type": "image",
+			"path": "image/x.png",
+			"width": 40,
+			"height": 35,
+			"global": true
+		},
+		"num": {
+			"type": "image",
+			"path": "image/num.png",
+			"width": 400,
+			"height": 35,
+			"global": true
+		},
+		"customer": {
+			"type": "image",
+			"path": "image/customer.png",
+			"width": 365,
+			"height": 45,
+			"global": true
+		},
+		"nc42113": {
+			"type": "audio",
+			"path": "audio/nc42113",
+			"systemId": "sound",
+			"duration": 1594,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			},
+			"global": true
+		},
+		"nc362622": {
+			"type": "audio",
+			"path": "audio/nc362622",
+			"systemId": "music",
+			"duration": 74737,
+			"hint": {
+				"extensions": [
+					".m4a",
+					".ogg"
+				]
+			},
+			"global": true
+		},
+		"title": {
+			"type": "image",
+			"path": "image/title.png",
+			"width": 800,
+			"height": 720,
+			"global": true
 		}
 	},
 	"environment": {
@@ -378,7 +373,10 @@
 		"nicolive": {
 			"supportedModes": [
 				"ranking"
-			]
+			],
+			"preferredSessionParameters": {
+				"totalTimeLimit": 135
+			}
 		}
 	},
 	"globalScripts": [
@@ -386,15 +384,15 @@
 		"node_modules/@akashic-extension/akashic-box2d/lib/ContactManager.js",
 		"node_modules/@akashic-extension/akashic-box2d/lib/index.js",
 		"node_modules/@akashic-extension/akashic-box2d/lib/parameters.js",
-		"node_modules/box2dweb/box2d.js",
-		"node_modules/@akashic-extension/akashic-box2d/patch/index.js",
 		"node_modules/@akashic-extension/akashic-box2d/patch/box2d.js",
+		"node_modules/@akashic-extension/akashic-box2d/patch/index.js",
 		"node_modules/@akashic-extension/akashic-box2d/patch/math.js",
 		"node_modules/@akashic-extension/akashic-timeline/lib/ActionType.js",
 		"node_modules/@akashic-extension/akashic-timeline/lib/Easing.js",
 		"node_modules/@akashic-extension/akashic-timeline/lib/Timeline.js",
 		"node_modules/@akashic-extension/akashic-timeline/lib/Tween.js",
-		"node_modules/@akashic-extension/akashic-timeline/lib/index.js"
+		"node_modules/@akashic-extension/akashic-timeline/lib/index.js",
+		"node_modules/box2dweb/box2d.js"
 	],
 	"moduleMainScripts": {
 		"@akashic-extension/akashic-box2d": "node_modules/@akashic-extension/akashic-box2d/lib/index.js",
