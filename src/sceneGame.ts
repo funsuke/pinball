@@ -53,7 +53,10 @@ export class SceneGame extends g.Scene {
 	private bonusScore: Number;
 	private timeScore: Number;
 	private cntMoba: number = 0;
-	private playTime: number = 120;
+	private playTime: number = 100;
+	private isExistBall2: boolean[] = [false, false];
+	private isExistBall3: boolean[] = [false, false];
+	private isEnd: boolean = false;
 	//
 	constructor(param: g.GameMainParameterObject) {
 		super({ game: g.game });
@@ -77,6 +80,86 @@ export class SceneGame extends g.Scene {
 				this.b2Lion = new AkashicB2Body(this.lion, this.box2d, B2BodyData.lion).getEBody();
 				this.addEventLion();
 				this.isAliveLion = false;
+			}
+			// 追加
+			if (this.playTime <= 55 && this.isExistBall2[0] === false) {
+				const ball = new g.Sprite({
+					scene: this,
+					src: this.asset.getImageById("ball"),
+					anchorX: 0.5, anchorY: 0.5,
+					// x: 320, y: 400, // ボッシュートテスト
+					// x: 960, y: 400, // ボッシュートテスト
+					// x: 840, y: 400,
+					x: PADDING_X + 167.5, y: 400,
+					hidden: true,
+					parent: this,
+				});
+				new tl.Timeline(this).create(ball)
+					.call(() => {
+						ball.show();
+					}).every((e, p) => {
+						const cnt = Math.floor(e / 200);
+						console.log("" + cnt + ":" + ball.opacity);
+						if (cnt % 2 === 0 && ball.opacity === 1.0) {
+							ball.opacity = 0.3;
+							ball.modified();
+						} else if (cnt % 2 === 1 && ball.opacity === 0.3) {
+							ball.opacity = 1.0;
+							ball.modified();
+						}
+					}, 5000).call(() => {
+						const b2Ball: b2.EBody = new AkashicB2Body(ball, this.box2d, B2BodyData.ball).getEBody();
+						// ボール位置補正処理
+						ball.onUpdate.add(() => {
+							this.ballCheckDrink(b2Ball);
+							this.ballPushUp(b2Ball);
+						});
+					});
+				this.isExistBall2[0] = true;
+			};
+			if (this.playTime <= 25 && this.isExistBall3[0] === false) {
+				const ball = new g.Sprite({
+					scene: this,
+					src: this.asset.getImageById("ball"),
+					anchorX: 0.5, anchorY: 0.5,
+					// x: 320, y: 400, // ボッシュートテスト
+					// x: 960, y: 400, // ボッシュートテスト
+					// x: 840, y: 400,
+					x: PADDING_X + 167.5, y: 400,
+					hidden: true,
+					parent: this,
+				});
+				new tl.Timeline(this).create(ball)
+					.call(() => {
+						ball.show();
+					}).every((e, p) => {
+						const cnt = Math.floor(e / 200);
+						console.log("" + cnt + ":" + ball.opacity);
+						if (cnt % 2 === 0 && ball.opacity === 1.0) {
+							ball.opacity = 0.3;
+							ball.modified();
+						} else if (cnt % 2 === 1 && ball.opacity === 0.3) {
+							ball.opacity = 1.0;
+							ball.modified();
+						}
+					}, 5000).call(() => {
+						const b2Ball: b2.EBody = new AkashicB2Body(ball, this.box2d, B2BodyData.ball).getEBody();
+						// ボール位置補正処理
+						ball.onUpdate.add(() => {
+							this.ballCheckDrink(b2Ball);
+							this.ballPushUp(b2Ball);
+						});
+					});
+				this.isExistBall3[0] = true;
+			};
+			if (this.playTime <= 0 && this.isEnd === false) {
+				// ボーナス計算
+				g.game.vars.gameState.score += this.bonusScore.nowScore * this.multiScore.nowScore;
+				this.totalScore.setNumber(g.game.vars.gameState.score);
+				this.bonusScore.setNumber(1000);
+				this.multiScore.setNumber(1);
+				//
+				this.isEnd = true;
 			}
 			// 時間表示
 			this.timeScore.setNumber(Math.ceil(this.playTime));
@@ -122,26 +205,26 @@ export class SceneGame extends g.Scene {
 					this.buttonREntity.modified();
 					this.moveFlipperR(+FLIPPER_SPEED);
 					break;
-				case 90:	// Z	テスト用
-					// 左アウトレーン通過
-					this.setBallPosition(320, 400);
-					break;
-				case 88:	// X	テスト用
-					// 左リターンレーン通過
-					this.setBallPosition(PADDING_X + 167.5, 400);
-					break;
-				case 67:	// C テスト用
-					// 右リターンレーン通過
-					this.setBallPosition(g.game.width - (PADDING_X + 167.5), 400);
-					break;
-				case 86:	// V テスト用
-					// 右アウトレーン通過
-					this.setBallPosition(960, 400);
-					break;
-				case 66:	// B テスト用
-					// 左ナマコ激突
-					this.setBallPosition(PADDING_X + 250, 300);
-					break;
+				// case 90:	// Z	テスト用
+				// 	// 左アウトレーン通過
+				// 	this.setBallPosition(320, 400);
+				// 	break;
+				// case 88:	// X	テスト用
+				// 	// 左リターンレーン通過
+				// 	this.setBallPosition(PADDING_X + 167.5, 400);
+				// 	break;
+				// case 67:	// C テスト用
+				// 	// 右リターンレーン通過
+				// 	this.setBallPosition(g.game.width - (PADDING_X + 167.5), 400);
+				// 	break;
+				// case 86:	// V テスト用
+				// 	// 右アウトレーン通過
+				// 	this.setBallPosition(960, 400);
+				// 	break;
+				// case 66:	// B テスト用
+				// 	// 左ナマコ激突
+				// 	this.setBallPosition(PADDING_X + 250, 300);
+				// 	break;
 			};
 		});
 		window.addEventListener("keyup", (ev: any) => {
@@ -332,6 +415,15 @@ export class SceneGame extends g.Scene {
 		// -------------------------------------------------------------
 		// 天井
 		// -------------------------------------------------------------
+		// 天井
+		const wallU = new g.E({
+			scene: this,
+			width: 130, height: 8,
+			anchorX: 0.5, anchorY: 0.0,
+			x: g.game.width / 2, y: 0,
+		});
+		// AkashicB2Body設定
+		new AkashicB2Body(wallU, this.box2d, B2BodyData.wallU);
 		// 天井１
 		const wallU1 = new g.E({
 			scene: this,
@@ -339,7 +431,7 @@ export class SceneGame extends g.Scene {
 			x: 375, y: 0,
 		});
 		// AkashicB2Body設定
-		new AkashicB2Body(wallU1, this.box2d, B2BodyData.wallU1);
+		new AkashicB2Body(wallU1, this.box2d, B2BodyData.wallU);
 		// 天井２
 		const wallU2 = new g.E({
 			scene: this,
@@ -349,7 +441,7 @@ export class SceneGame extends g.Scene {
 			x: g.game.width - 375, y: 0,
 		});
 		// AkashicB2Body設定
-		new AkashicB2Body(wallU2, this.box2d, B2BodyData.wallU2);
+		new AkashicB2Body(wallU2, this.box2d, B2BodyData.wallU);
 		// -------------------------------------------------------------
 		// ハッカ油
 		// -------------------------------------------------------------
@@ -707,7 +799,7 @@ export class SceneGame extends g.Scene {
 		// ボール位置補正処理
 		ball.onUpdate.add(() => {
 			this.ballCheckDrink(this.b2Ball);
-			this.ballPushUp();
+			this.ballPushUp(this.b2Ball);
 		});
 		// -------------------------------------------------------------
 		// アツマライオン(アップポスト)
@@ -927,12 +1019,13 @@ export class SceneGame extends g.Scene {
 		contactListener.BeginContact = ((contact: b2.Box2DWeb) => {
 			// ボール→右スリングショットの衝突判定
 			if (this.box2d.isContact(this.b2Ball, b2SlingshotR, contact)) {
+				const bodyB: b2.Box2DWeb.Dynamics.b2Body = contact.GetFixtureB().GetBody();
 				const vec2: b2.Box2DWeb.vec2 = contact.GetManifold().m_localPlaneNormal;
 				// console.log("x = " + vec2.x + ", y = " + vec2.y);
 				// console.log("ボールが右スリングショットが衝突");
 				if (vec2.x < 0 && vec2.y < 0) {
 					// console.log("右スリングショット発動");
-					this.b2Ball.b2Body.ApplyImpulse(this.box2d.vec2(-780, -450), this.b2Ball.b2Body.GetPosition());
+					bodyB.ApplyImpulse(this.box2d.vec2(-780, -450), bodyB.GetPosition());
 					//
 					this.asset.getAudioById("nc363836").play();
 					//
@@ -941,12 +1034,13 @@ export class SceneGame extends g.Scene {
 			}
 			// ボール→左スリングショットの衝突判定
 			if (this.box2d.isContact(this.b2Ball, b2SlingshotL, contact)) {
+				const bodyB: b2.Box2DWeb.Dynamics.b2Body = contact.GetFixtureB().GetBody();
 				const vec2: b2.Box2DWeb.vec2 = contact.GetManifold().m_localPlaneNormal;
 				// console.log("x = " + vec2.x + ", y = " + vec2.y);
 				// console.log("ボールが左スリングショットが衝突");
 				if (vec2.x > 0 && vec2.y < 0) {
 					// console.log("左スリングショット発動");
-					this.b2Ball.b2Body.ApplyImpulse(this.box2d.vec2(780, -450), this.b2Ball.b2Body.GetPosition());
+					bodyB.ApplyImpulse(this.box2d.vec2(780, -450), bodyB.GetPosition());
 					//
 					this.asset.getAudioById("nc363836").play();
 					//
@@ -955,8 +1049,9 @@ export class SceneGame extends g.Scene {
 			}
 			// ボール→左ハッカの衝突判定
 			if (this.box2d.isContact(this.b2Ball, this.b2DrinkL, contact)) {
+				const bodyB: b2.Box2DWeb.Dynamics.b2Body = contact.GetFixtureB().GetBody();
 				// console.log("ボールが左ハッカと衝突");
-				this.b2Ball.b2Body.ApplyImpulse(this.box2d.vec2(0, -700), this.b2Ball.b2Body.GetPosition());
+				bodyB.ApplyImpulse(this.box2d.vec2(0, -700), bodyB.GetPosition());
 				// ハッカ削除と更新
 				this.drinkL.frameNumber = 0;
 				this.drinkL.modified();
@@ -969,8 +1064,9 @@ export class SceneGame extends g.Scene {
 			}
 			// ボール→右ハッカの衝突判定
 			if (this.box2d.isContact(this.b2Ball, this.b2DrinkR, contact)) {
+				const bodyB: b2.Box2DWeb.Dynamics.b2Body = contact.GetFixtureB().GetBody();
 				// console.log("ボールが右ハッカと衝突");
-				this.b2Ball.b2Body.ApplyImpulse(this.box2d.vec2(0, -700), this.b2Ball.b2Body.GetPosition());
+				bodyB.ApplyImpulse(this.box2d.vec2(0, -700), bodyB.GetPosition());
 				// ハッカ削除と更新
 				this.drinkR.frameNumber = 2;
 				this.drinkR.modified();
@@ -1067,8 +1163,8 @@ export class SceneGame extends g.Scene {
 		this.flipperRJoint.SetMotorSpeed(spd);
 	}
 
-	private ballPushUp(): void {
-		if (this.b2Ball.b2Body.GetPosition().y > (GB.height + 500) / this.box2d.scale) {
+	private ballPushUp(b2ball: b2.EBody): void {
+		if (b2ball.b2Body.GetPosition().y > (GB.height + 500) / this.box2d.scale) {
 			// ボーナス計算
 			g.game.vars.gameState.score += this.bonusScore.nowScore * this.multiScore.nowScore;
 			this.totalScore.setNumber(g.game.vars.gameState.score);
@@ -1080,20 +1176,21 @@ export class SceneGame extends g.Scene {
 			// 再配置
 			this.setBallPosition(
 				g.game.width / 2, g.game.height + this.b2Ball.entity.height,
-				this.box2d.vec2(0, 0), 30
+				this.box2d.vec2(0, 0), 30,
+				b2ball
 			);
 			// 上方向にインパルスを与えて打ち上げる
 			if (!DEBUG_DRINK_REMOVE) {
-				this.b2Ball.b2Body.ApplyImpulse(this.box2d.vec2(30, -700), this.b2Ball.b2Body.GetPosition());
+				b2ball.b2Body.ApplyImpulse(this.box2d.vec2(30, -700), b2ball.b2Body.GetPosition());
 			}
 			if (DEBUG_DRINK_REMOVE) {
 				// debug 削除テスト
-				this.b2Ball.b2Body.SetAngularVelocity(0);
-				this.b2Ball.b2Body.SetPosition(this.box2d.vec2(960, 400));
+				b2ball.b2Body.SetAngularVelocity(0);
+				b2ball.b2Body.SetPosition(this.box2d.vec2(960, 400));
 			}
 		}
 	}
-	// ボールがハッカの高さを超えたかチェック
+	// ボールがハッカチェッカーを通ったかチェック
 	private ballCheckDrink(b2ball: b2.EBody): void {
 		// ボール位置取得
 		const ballPosX: number = b2ball.b2Body.GetPosition().x * this.box2d.scale - PADDING_X;
@@ -1139,11 +1236,12 @@ export class SceneGame extends g.Scene {
 	private setBallPosition(
 		x: number, y: number,
 		vec2: b2.Box2DWeb.Math.vec2 = this.box2d.vec2(0, 0),
-		omega: number = 0.0
+		omega: number = 0.0,
+		b2Ball: b2.EBody
 	): void {
-		this.b2Ball.b2Body.SetLinearVelocity(vec2);
-		this.b2Ball.b2Body.SetAngularVelocity(omega);
-		this.b2Ball.b2Body.SetPosition(this.box2d.vec2(x, y));
+		b2Ball.b2Body.SetLinearVelocity(vec2);
+		b2Ball.b2Body.SetAngularVelocity(omega);
+		b2Ball.b2Body.SetPosition(this.box2d.vec2(x, y));
 	}
 
 	/**

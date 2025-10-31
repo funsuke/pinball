@@ -11,6 +11,7 @@ export interface AkashicB2BodyParameterObject {
 	b2Shapes: B2Shape[];
 	vertices: number[][][];
 	isDynamic: boolean;
+	userData?: string | undefined;
 };
 
 export class AkashicB2Body {
@@ -21,6 +22,7 @@ export class AkashicB2Body {
 	private b2Shapes: B2Shape[];
 	private vertices: number[][][];
 	private isDynamic: boolean;
+	private userData: string | undefined;
 	//
 	constructor(entity: g.E, box2d: b2.Box2D, p: AkashicB2BodyParameterObject) {
 		//
@@ -30,6 +32,7 @@ export class AkashicB2Body {
 		this.b2Shapes = p.b2Shapes;
 		this.vertices = p.vertices;
 		this.isDynamic = p.isDynamic;
+		this.userData = (p.userData) ? p.userData : undefined;
 		//
 		this.init();
 	}
@@ -45,6 +48,7 @@ export class AkashicB2Body {
 		// Body設定
 		const b2BodyDef = this.box2d.createBodyDef({
 			type: this.isDynamic ? b2.BodyType.Dynamic : b2.BodyType.Static,
+			userData: this.userData,
 		});
 		// Fixture設定
 		const b2FixtureDef: b2.Box2DFixtureDef[] = [];

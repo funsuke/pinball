@@ -276,22 +276,9 @@ export class B2BodyData {
 		]],
 	};
 	// -----------------------------
-	// 天井ブロック上１
+	// 天井ブロック上
 	// -----------------------------
-	static wallU1: AkashicB2BodyParameterObject = {
-		isDynamic: false,
-		b2FixtureDefs: [{
-			density: 0.5,
-			friction: 0.4,
-			restitution: 0.2,
-		}],
-		b2Shapes: [B2Shape.rect],
-		vertices: [[[135, 8]]],
-	};
-	// -----------------------------
-	// 天井ブロック上２
-	// -----------------------------
-	static wallU2: AkashicB2BodyParameterObject = {
+	static wallU: AkashicB2BodyParameterObject = {
 		isDynamic: false,
 		b2FixtureDefs: [{
 			density: 0.5,
@@ -334,11 +321,12 @@ export class B2BodyData {
 		isDynamic: true,
 		b2FixtureDefs: [{
 			density: 1.5,				// 密度
-			friction: 0.4,			// 摩擦係数
+			friction: 0.2,			// 摩擦係数
 			restitution: 0.2,		// 反発係数
 		}],
 		b2Shapes: [B2Shape.circle],
 		vertices: [[[50]]],		// 半径
+		userData: "ball",
 	};
 	// -----------------------------
 	// ハッカ油
